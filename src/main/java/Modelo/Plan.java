@@ -5,6 +5,7 @@
 package Modelo;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
@@ -14,6 +15,7 @@ public class Plan {
     private Integer idPlan;
     private String nomPlan;
     private Integer anioInicio;
+    
     private ArrayList<Materia> materias;
     
     //constructor
@@ -22,7 +24,8 @@ public class Plan {
         this.idPlan = idPlan;
         this.nomPlan = nomPlan;
         this.anioInicio = anioInicio;
-        this.materias=new ArrayList<>();
+        
+        this.materias=new ArrayList();
     }
     
     public Plan(Integer idPlan, String nomPlan, Integer anioInicio) {
@@ -34,44 +37,107 @@ public class Plan {
     
     //funcionalidades
     
+    public void agregarMateria(Materia materia) throws Exception{
+        if(existeMateria(materia)){
+            throw new Exception("La materia "+materia.getNomMat()+" ya está cargada en el sistema.");
+        }
+        
+        this.materias.add(materia);
+    }
+    
+    public void agregarMaterias(ArrayList<Materia> materias) throws Exception{
+        for(Materia materia:materias){
+            agregarMateria(materia);
+        }
+    }
+    
+    public Materia buscarMateria(Integer idMat){
+        for(Materia materia:materias){
+            if(materia.getIdMat().equals(idMat)){
+                return materia;
+            }
+        }
+        
+        return null;
+    }
+    
+    public Materia buscarMateria(String nomMat){
+        for(Materia materia:materias){
+            if(materia.getNomMat().equalsIgnoreCase(nomMat)){
+                return materia;
+            }
+        }
+        
+        return null;
+    }
+    
+    public void editarMateria(Materia materia, String nomMat, Integer anioCursado) throws Exception{
+        if(!existeMateria(materia)){
+            throw new Exception("La materia "+materia.getNomMat()+"no está cargada en el sistema.");
+        }
+        
+        materia.setNomMat(nomMat);
+        materia.setAnioCursado(anioCursado);
+    }
+    
+    public void removerMateria(Materia materia) throws Exception{
+        if(!materias.contains(materia)){
+            throw new Exception("La materia "+materia.toString()+" no está cargada en el sistema.");
+        }
+        
+        materias.remove(materia);
+    }
+    
+    public boolean existeMateria(Materia materia){
+        if(materias.isEmpty()){
+            return false;
+        }
+        
+        return materias.contains(materia);
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.idPlan);
+        hash = 29 * hash + Objects.hashCode(this.nomPlan);
+        hash = 29 * hash + Objects.hashCode(this.anioInicio);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Plan other = (Plan) obj;
+        if (!Objects.equals(this.nomPlan, other.nomPlan)) {
+            return false;
+        }
+        if (!Objects.equals(this.idPlan, other.idPlan)) {
+            return false;
+        }
+        return Objects.equals(this.anioInicio, other.anioInicio);
+    }
+    
     @Override
     public String toString(){
         return this.nomPlan;
     }
     
-    public void agregarMaterias(ArrayList<Materia> materias){
-        for(Materia materia:materias){
-            if(!existeMateria(materia)){
-                agregarMateria(materia);
-            }
-        }
+    //setters
+
+    public void setNomPlan(String nomPlan) {
+        this.nomPlan = nomPlan;
     }
-    
-    public void agregarMateria(Materia unaMateria){
-        if(!existeMateria(unaMateria)){
-            this.materias.add(unaMateria);
-        }
-    }
-    
-    public void removerMateria(int idMateria){
-        for(Materia materia:this.materias){
-            if(materia.getIdMat()==idMateria){
-                this.materias.remove(materia);
-            }
-        }
-    }
-    
-    public boolean existeMateria(Materia unaMateria){
-        for(Materia materia:this.materias){
-            if(materia.getIdMat()==unaMateria.getIdMat()){
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    //getters & setters
+
+    //getters
 
     public Integer getIdPlan() {
         return idPlan;
@@ -88,22 +154,4 @@ public class Plan {
     public ArrayList<Materia> getMaterias() {
         return materias;
     }
-
-    public void setIdPlan(Integer idPlan) {
-        this.idPlan = idPlan;
-    }
-
-    public void setNomPlan(String nomPlan) {
-        this.nomPlan = nomPlan;
-    }
-
-    public void setAnioInicio(Integer anioInicio) {
-        this.anioInicio = anioInicio;
-    }
-
-    public void setMaterias(ArrayList<Materia> materias) {
-        this.materias = materias;
-    }
-    
-    
 }

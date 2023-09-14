@@ -16,74 +16,81 @@ public class Carrera {
     
     private ArrayList<Plan> planes;
     
-    //constructores
-
-    public Carrera(Integer idCarrera, String nomCarrera, ArrayList planes) {
-        this.idCarrera = idCarrera;
-        this.nomCarrera = nomCarrera;
-        this.planes = new ArrayList<>();
-        
-        agregarPlanes(planes);
-    }
+    //constructor
 
     public Carrera(Integer idCarrera, String nomCarrera) {
         this.idCarrera = idCarrera;
         this.nomCarrera = nomCarrera;
-        this.planes = new ArrayList<>();
+        
+        this.planes=new ArrayList();
     }
     
     //funcionalidades
+    
+    public void agregarPlan(Plan plan) throws Exception{
+        if(existePlan(plan)){
+            throw new Exception("El plan ID"+plan.getIdPlan()+" ya está cargado en el sistema.");
+        }
+        
+        this.planes.add(plan);
+    }
+    
+    public void agregarPlanes(ArrayList<Plan> planes) throws Exception{
+        for(Plan plan:planes){
+            agregarPlan(plan);
+        }
+    }
+    
+    public Plan buscarPlan(String nomPlan){
+        for(Plan plan:planes){
+            if(plan.getNomPlan().equalsIgnoreCase(nomPlan)){
+                return plan;
+            }
+        }
+        
+        return null;
+    }
+    
+    public Plan buscarPlan(Integer idPlan){
+        for(Plan plan:planes){
+            if(plan.getIdPlan().equals(idPlan)){
+                return plan;
+            }
+        }
+        
+        return null;
+    }
+    
+    public void editarPlan(Plan plan, String nomPlan) throws Exception{
+        if(!existePlan(plan)){
+            throw new Exception("El plan "+plan.getNomPlan()+" no está cargado en el sistema.");
+        }
+        
+        plan.setNomPlan(nomPlan);
+    }
+    
+    public void removerPlan(Plan plan) throws Exception{
+        if(!existePlan(plan)){
+            throw new Exception("El plan "+plan.getNomPlan()+" no está cargado en el sistema.");
+        }
+        
+        planes.remove(plan);
+    }
+    
+    public boolean existePlan(Plan plan){
+        if(planes.isEmpty()){
+            return false;
+        }
+        
+        return planes.contains(plan);
+    }
     
     @Override
     public String toString(){
         return this.nomCarrera;
     }
     
-    public void agregarPlanes(ArrayList<Plan> planes){
-        for(Plan plan:planes){
-            if(!existePlan(plan)){
-                agregarPlan(plan);
-            }
-        }
-    }
-    
-    public void agregarPlan(Plan unPlan){
-        if(!existePlan(unPlan)){
-            this.planes.add(unPlan);
-        }
-    }
-    
-    public void removerPlan(int idPlan){
-        for(Plan plan:this.planes){
-            if(plan.getIdPlan()==idPlan){
-                this.planes.remove(plan);
-            }
-        }
-    }
-    
-    public boolean existePlan(Plan unPlan){
-        for(Plan i:planes){
-            if(unPlan.getIdPlan()==i.getIdPlan()){
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    //getters & setters
-    
-    public Integer getIdCarrera() {
-        return idCarrera;
-    }
-
-    public String getNomCarrera() {
-        return nomCarrera;
-    }
-
-    public ArrayList getPlanes() {
-        return planes;
-    }
+    //setters
 
     public void setIdCarrera(Integer idCarrera) {
         this.idCarrera = idCarrera;
@@ -92,8 +99,17 @@ public class Carrera {
     public void setNomCarrera(String nomCarrera) {
         this.nomCarrera = nomCarrera;
     }
+    //getters
 
-    public void setPlanes(ArrayList planes) {
-        this.planes = planes;
+    public Integer getIdCarrera() {
+        return idCarrera;
+    }
+
+    public String getNomCarrera() {
+        return nomCarrera;
+    }
+
+    public ArrayList<Plan> getPlanes() {
+        return planes;
     }
 }
